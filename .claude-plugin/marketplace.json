@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "oh-my-claudecode-slim",
+  "description": "Lightweight multi-agent orchestration for Claude Code — 6 focused specialists, no bloat",
+  "owner": {
+    "name": "markvh033"
+  },
+  "plugins": [
+    {
+      "name": "oh-my-claudecode-slim",
+      "description": "Six specialist agents (explorer, oracle, fixer, librarian, designer, council) with a lean orchestrator prompt. Clear delegation rules, no framework overhead.",
+      "version": "1.0.0",
+      "author": {
+        "name": "markvh033"
+      },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/markvh033/oh-my-claudecode-slim",
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "delegation",
+        "slim"
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}
