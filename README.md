@@ -25,36 +25,18 @@ Installs a `CLAUDE.md` orchestrator prompt and six specialist sub-agents into Cl
 
 ## Installation
 
-### Quick start (recommended)
-
-```bash
-npx oh-my-claudecode-slim install
-```
-
-Choose **global** to install in `~/.claude` (active in all Claude Code sessions), or **local** to install in `./.claude` (current project only).
-
-Non-interactive:
-```bash
-npx oh-my-claudecode-slim install --global
-npx oh-my-claudecode-slim install --local
-```
-
 ### Via Claude Code plugin marketplace
 
 ```
 /plugin marketplace add https://github.com/markvh033/oh-my-claudecode-slim
 ```
 
-Then run the installer from within Claude Code:
-
-```
-install oh-my-claudecode-slim globally
-```
-
-Or from your terminal:
+Then run the installer:
 
 ```bash
-npx oh-my-claudecode-slim install --global
+git clone https://github.com/markvh033/oh-my-claudecode-slim.git
+cd oh-my-claudecode-slim
+node bin/install.js install --global
 ```
 
 ### Manual install
@@ -62,7 +44,15 @@ npx oh-my-claudecode-slim install --global
 ```bash
 git clone https://github.com/markvh033/oh-my-claudecode-slim.git
 cd oh-my-claudecode-slim
+node bin/install.js install
+```
+
+Choose **global** to install in `~/.claude` (active in all Claude Code sessions), or **local** to install in `./.claude` (current project only).
+
+Non-interactive:
+```bash
 node bin/install.js install --global
+node bin/install.js install --local
 ```
 
 ---
@@ -134,9 +124,9 @@ model: claude-sonnet-4-6
 ## Uninstall
 
 ```bash
-npx oh-my-claudecode-slim uninstall --global
+node bin/install.js uninstall --global
 # or
-npx oh-my-claudecode-slim uninstall --local
+node bin/install.js uninstall --local
 ```
 
 This strips the OMCS block from your `CLAUDE.md` (preserving any other content) and removes the agent files.
@@ -146,7 +136,9 @@ This strips the OMCS block from your `CLAUDE.md` (preserving any other content) 
 ## Updating
 
 ```bash
-npx oh-my-claudecode-slim@latest install --global
+cd oh-my-claudecode-slim
+git pull
+node bin/install.js install --global
 ```
 
 The installer detects existing OMCS markers and updates the block in-place, preserving any user content outside the markers.
