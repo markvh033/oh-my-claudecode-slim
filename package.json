@@ -30,11 +30,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/markvanheyningen/oh-my-claudecode-slim.git"
+    "url": "git+https://github.com/markvh033/oh-my-claudecode-slim.git"
   },
-  "homepage": "https://github.com/markvanheyningen/oh-my-claudecode-slim#readme",
+  "homepage": "https://github.com/markvh033/oh-my-claudecode-slim#readme",
   "bugs": {
-    "url": "https://github.com/markvanheyningen/oh-my-claudecode-slim/issues"
+    "url": "https://github.com/markvh033/oh-my-claudecode-slim/issues"
   },
   "author": "Mark van Heyningen",
   "license": "MIT",

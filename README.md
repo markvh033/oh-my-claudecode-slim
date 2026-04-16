@@ -42,7 +42,7 @@ npx oh-my-claudecode-slim install --local
 ### Via Claude Code plugin marketplace
 
 ```
-/plugin marketplace add https://github.com/YOUR_USERNAME/oh-my-claudecode-slim
+/plugin marketplace add https://github.com/markvh033/oh-my-claudecode-slim
 ```
 
 Then run the installer from within Claude Code:
@@ -60,7 +60,7 @@ npx oh-my-claudecode-slim install --global
 ### Manual install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/oh-my-claudecode-slim.git
+git clone https://github.com/markvh033/oh-my-claudecode-slim.git
 cd oh-my-claudecode-slim
 node bin/install.js install --global
 ```
