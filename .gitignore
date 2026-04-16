@@ -1,0 +1,8 @@
+.DS_Store
+*.log
+.omc/
+node_modules/
+.claude/settings*.json
+# Installed output files (source lives in docs/ and agents/)
+/CLAUDE.md
+/.claude/agents/

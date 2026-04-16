@@ -1,0 +1,47 @@
+{
+  "name": "oh-my-claudecode-slim",
+  "version": "1.0.0",
+  "description": "Lightweight multi-agent orchestration for Claude Code — 6 focused specialists, no bloat",
+  "type": "commonjs",
+  "bin": {
+    "oh-my-claudecode-slim": "bin/install.js",
+    "omcs": "bin/install.js"
+  },
+  "files": [
+    "agents",
+    "bin",
+    "docs",
+    ".claude-plugin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "install-global": "node bin/install.js install --global",
+    "install-local": "node bin/install.js install --local"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "agent",
+    "multi-agent",
+    "orchestration",
+    "anthropic"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markvanheyningen/oh-my-claudecode-slim.git"
+  },
+  "homepage": "https://github.com/markvanheyningen/oh-my-claudecode-slim#readme",
+  "bugs": {
+    "url": "https://github.com/markvanheyningen/oh-my-claudecode-slim/issues"
+  },
+  "author": "Mark van Heyningen",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

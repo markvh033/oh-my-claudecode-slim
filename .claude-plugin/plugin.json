@@ -1,0 +1,18 @@
+{
+  "name": "oh-my-claudecode-slim",
+  "version": "1.0.0",
+  "description": "Lightweight multi-agent orchestration for Claude Code — 6 focused specialists, no bloat",
+  "author": {
+    "name": "Mark van Heyningen"
+  },
+  "repository": "https://github.com/markvanheyningen/oh-my-claudecode-slim",
+  "homepage": "https://github.com/markvanheyningen/oh-my-claudecode-slim",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "multi-agent",
+    "orchestration",
+    "slim"
+  ]
+}
