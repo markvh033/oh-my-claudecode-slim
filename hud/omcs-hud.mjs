@@ -20,7 +20,9 @@ const CONFIG_DIR = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude');
 const HUD_DIR    = join(CONFIG_DIR, 'hud');
 const CACHE_FILE = join(HUD_DIR, 'omcs-usage-cache.json');
 const SESSION_FILE = join(HUD_DIR, 'omcs-session.json');
-const CACHE_TTL  = 60_000; // 1 minute
+const CACHE_TTL        = 60_000;       // 1 minute for successful responses
+const CACHE_TTL_429    = 5 * 60_000;   // 5 minutes after a 429
+const CACHE_STALE_MAX  = 15 * 60_000;  // show stale data for up to 15 minutes
 
 const OAUTH_CLIENT_ID = '9d1c250a-e61b-44d9-88ed-5944d1962f5e';
 
@@ -82,7 +84,9 @@ function readCredentials() {
         ['find-generic-password', '-s', 'Claude Code-credentials', '-w'],
         { timeout: 3000, stdio: ['ignore', 'pipe', 'ignore'] }
       ).toString().trim();
-      const creds = JSON.parse(raw);
+      const data = JSON.parse(raw);
+      // Credentials may be nested under claudeAiOauth or at top level
+      const creds = data.claudeAiOauth ?? data;
       if (creds.accessToken) return { ...creds, source: 'keychain' };
     } catch { /* fall through */ }
   }
@@ -162,23 +166,47 @@ async function refreshAccessToken(creds) {
 
 function readCache() {
   try {
-    if (!existsSync(CACHE_FILE)) return null;
+    if (!existsSync(CACHE_FILE)) return { data: null, blocked: false };
     const c = JSON.parse(readFileSync(CACHE_FILE, 'utf8'));
-    if (Date.now() - c.timestamp < CACHE_TTL) return c.data;
+    const age = Date.now() - c.timestamp;
+
+    if (c.rateLimited) {
+      // Still in 429 backoff window — return last good data if not too stale
+      if (age < CACHE_TTL_429) {
+        const staleAge = Date.now() - (c.lastSuccessAt ?? 0);
+        return { data: staleAge < CACHE_STALE_MAX ? (c.lastData ?? null) : null, blocked: true };
+      }
+    } else if (age < CACHE_TTL) {
+      return { data: c.data, blocked: false };
+    }
   } catch { /* fall through */ }
-  return null;
+  return { data: null, blocked: false };
 }
 
-function writeCache(data) {
+function writeCache(data, { rateLimited = false, lastData = null, lastSuccessAt = null } = {}) {
   try {
     mkdirSync(HUD_DIR, { recursive: true });
-    writeFileSync(CACHE_FILE, JSON.stringify({ timestamp: Date.now(), data }));
+    writeFileSync(CACHE_FILE, JSON.stringify({
+      timestamp: Date.now(),
+      data: rateLimited ? null : data,
+      rateLimited,
+      lastData: rateLimited ? lastData : data,
+      lastSuccessAt: rateLimited ? lastSuccessAt : Date.now(),
+    }));
   } catch { /* best-effort */ }
 }
 
+function readLastGoodCache() {
+  try {
+    if (!existsSync(CACHE_FILE)) return null;
+    const c = JSON.parse(readFileSync(CACHE_FILE, 'utf8'));
+    return c.lastData ?? c.data ?? null;
+  } catch { return null; }
+}
+
 async function fetchUsage() {
-  const cached = readCache();
-  if (cached) return cached;
+  const { data: cached, blocked } = readCache();
+  if (cached || blocked) return cached;
 
   let creds = readCredentials();
   if (!creds) return null;
@@ -190,6 +218,13 @@ async function fetchUsage() {
 
   try {
     const res = await httpsGet('api.anthropic.com', '/api/oauth/usage', creds.accessToken);
+    if (res.status === 429) {
+      const lastData = readLastGoodCache();
+      let lastSuccessAt = null;
+      try { lastSuccessAt = JSON.parse(readFileSync(CACHE_FILE, 'utf8')).lastSuccessAt; } catch {}
+      writeCache(null, { rateLimited: true, lastData, lastSuccessAt });
+      return lastData;
+    }
     if (res.status !== 200) return null;
     const data = JSON.parse(res.body);
     writeCache(data);
